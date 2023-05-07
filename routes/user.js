@@ -1,3 +1,4 @@
+const { decryptText } = require("../helpers");
 const UserSchema = require("../modals/userSchema");
 const UserRoute = require("express").Router();
 const JWT = require("jsonwebtoken");
@@ -23,10 +24,12 @@ UserRoute.post("/user", async (req, res) => {
 
 //Login
 UserRoute.post("/user/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { name, password } = req.body;
   try {
-    let data = await UserSchema.findOne({ email: email });
-    if (data.password === password) {
+    let data = await UserSchema.findOne({ email: name });
+    let decryptUserPass = decryptText(password);
+    let decryptDBPass = decryptText(data.password);
+    if (decryptUserPass === decryptDBPass) {
       const accessToken = JWT.sign(
         {
           id: data._id,
@@ -38,9 +41,11 @@ UserRoute.post("/user/login", async (req, res) => {
         }
       );
       res.status(200).json({ ...data._doc, accessToken });
+    } else {
+      res.status(200).send({ message: "User Not Authorized" });
     }
   } catch (error) {
-    res.status(404).json({ message: error });
+    res.status(200).json({ message: "No User Found" });
   }
 });
 
@@ -51,7 +56,7 @@ UserRoute.post("/user/auth", async (req, res) => {
     const token = authHeader.split(" ")[1];
     JWT.verify(token, secret, (err, data) => {
       if (err) res.status(404).json({ isUser: false });
-      res.status(200).json({ ...data, isUser: true });
+      else res.status(200).json({ ...data, isUser: true });
     });
   }
 });

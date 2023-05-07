@@ -1,4 +1,5 @@
 const Jwt = require("jsonwebtoken");
+var CryptoJS = require("crypto-js");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.token;
@@ -16,4 +17,22 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken };
+const encryptText = (password) => {
+  try {
+    return CryptoJS.AES.encrypt(password, process.env.TS_KEY).toString();
+  } catch (error) {
+    console.log("Error : ", error);
+  }
+};
+
+const decryptText = (password) => {
+  try {
+    return CryptoJS.AES.decrypt(password, process.env.TS_KEY).toString(
+      CryptoJS.enc.Utf8
+    );
+  } catch (error) {
+    console.log("Error : ", error);
+  }
+};
+
+module.exports = { verifyToken, encryptText, decryptText };
