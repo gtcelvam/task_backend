@@ -1,0 +1,6 @@
+const TWILIO_NUMBER = process.env.TWILIO_NUMBER;
+const TWILIO_TOKEN = process.env.TWILIO_TOKEN;
+const TWILIO_SID = process.env.TWILIO_SID;
+const RECEIPTENT_NUMBER = process.env.RECEIPTENT_NUMBER;
+
+module.exports = { TWILIO_NUMBER, TWILIO_TOKEN, TWILIO_SID, RECEIPTENT_NUMBER };

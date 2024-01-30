@@ -3,6 +3,7 @@ require("dotenv").config();
 const Mongoose = require("mongoose");
 const cors = require("cors");
 const UserRoute = require("./routes/user");
+const { sendSMS } = require("./modals/sendSMS");
 const app = express();
 
 //Cors Policy
@@ -49,3 +50,6 @@ handleDBConnection()
     }
   })
   .catch((err) => console.log("Connection Error : ", err));
+
+//Send SMS
+// sendSMS();
